@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 from flask import Flask, request, jsonify, send_from_directory, Response
 import requests as req
 import re
@@ -10,7 +11,8 @@ import urllib.parse
 from bs4 import BeautifulSoup
 from urllib.parse import quote_plus
 
-app = Flask(__name__, static_folder=".", static_url_path="")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, static_folder=BASE_DIR, static_url_path="")
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
@@ -206,7 +208,7 @@ def fetch_ig_profile(username, session):
 # ─────────────────────────────────────────────
 @app.route("/")
 def index():
-    return send_from_directory(".", "dashboard.html")
+    return send_from_directory(BASE_DIR, "dashboard.html")
 
 
 @app.route("/scrape", methods=["POST"])
