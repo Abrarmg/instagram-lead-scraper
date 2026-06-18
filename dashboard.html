@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Instagram Lead Scraper Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08090d;
+      --surface: #0f1117;
+      --surface2: #161820;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.12);
+      --text: #f0f0f5;
+      --muted: rgba(255,255,255,0.38);
+      --accent: #9b5de5;
+      --green: #00f5d4;
+      --yellow: #fee440;
+      --red: #f87171;
+      --wa: #25D366;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAV */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 58px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15,17,23,0.97);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+    .nav-logo-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-badge {
+      background: rgba(0,245,212,0.1); border: 1px solid rgba(0,245,212,0.25);
+      color: var(--green); font-size: 11px; font-weight: 600; padding: 3px 9px;
+      border-radius: 20px;
+    }
+
+    /* LAYOUT */
+    .layout { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 300px; flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      padding: 22px 20px; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .section-title {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 1px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .section-divider {
+      height: 1px; background: var(--border); margin: 2px 0;
+    }
+
+    .field-label {
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.7px;
+      margin-bottom: 7px;
+    }
+
+    input[type="text"], textarea {
+      width: 100%; background: var(--surface2);
+      border: 1px solid var(--border2); border-radius: 10px;
+      padding: 11px 13px; font-size: 13.5px; color: var(--text);
+      outline: none; font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      caret-color: var(--accent);
+    }
+    textarea { resize: vertical; min-height: 72px; font-size: 12.5px; line-height: 1.6; }
+    input:focus, textarea:focus {
+      border-color: rgba(155,93,229,0.5);
+      box-shadow: 0 0 0 3px rgba(155,93,229,0.08);
+    }
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.18); }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+    .chip {
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 20px; padding: 3px 10px; font-size: 11px;
+      color: var(--muted); cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip.on { background: rgba(155,93,229,0.15); border-color: rgba(155,93,229,0.4); color: #c4b5fd; }
+
+    /* BUTTONS */
+    .btn {
+      width: 100%; padding: 13px; border: none; border-radius: 11px;
+      font-size: 13.5px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.22s; font-family: inherit;
+    }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #833ab4 0%, #c2185b 60%, #f57c00 100%);
+      color: #fff; box-shadow: 0 5px 20px rgba(131,58,180,0.28);
+    }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(131,58,180,0.4); }
+
+    .btn-green {
+      background: rgba(0,245,212,0.07); border: 1px solid rgba(0,245,212,0.28);
+      color: var(--green);
+    }
+    .btn-green:hover:not(:disabled) { background: rgba(0,245,212,0.13); }
+
+    .btn-wa {
+      background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.3);
+      color: #25D366;
+    }
+    .btn-wa:hover:not(:disabled) { background: rgba(37,211,102,0.15); }
+
+    .btn-sheets {
+      background: rgba(66,133,244,0.08); border: 1px solid rgba(66,133,244,0.28);
+      color: #60a5fa;
+    }
+    .btn-sheets:hover:not(:disabled) { background: rgba(66,133,244,0.15); }
+
+    /* PROGRESS */
+    .progress-wrap { display: none; }
+    .progress-label { font-size: 11.5px; color: var(--muted); margin-bottom: 7px; display: flex; justify-content: space-between; }
+    .progress-bar-bg { height: 5px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+    .progress-bar-fill {
+      height: 100%; background: linear-gradient(90deg, #833ab4, #f57c00);
+      border-radius: 99px; width: 0%; transition: width 0.4s ease;
+    }
+    .log-box {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 9px; padding: 10px 12px; max-height: 110px;
+      overflow-y: auto; font-size: 11px; color: var(--muted);
+      font-family: 'SF Mono','Fira Code',monospace; line-height: 1.8;
+      margin-top: 8px;
+    }
+    .log-line { display: block; }
+    .log-line.ok { color: var(--green); }
+    .log-line.warn { color: var(--yellow); }
+    .log-line.err { color: var(--red); }
+
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 11px; padding: 12px 10px; text-align: center;
+    }
+    .stat-num { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .stat-label { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+    .stat-num.purple { color: #c4b5fd; }
+    .stat-num.green  { color: var(--green); }
+    .stat-num.yellow { color: var(--yellow); }
+    .stat-num.pink   { color: #f9a8d4; }
+
+    /* SHEETS PANEL */
+    .sheets-panel {
+      background: rgba(66,133,244,0.05);
+      border: 1px solid rgba(66,133,244,0.18);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sheets-hint {
+      font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6;
+    }
+    .sheets-hint a { color: #60a5fa; text-decoration: none; }
+    .sheets-hint a:hover { text-decoration: underline; }
+    .sheets-status {
+      font-size: 12px; font-weight: 600; padding: 6px 10px;
+      border-radius: 8px; display: none;
+    }
+    .sheets-status.ok  { background: rgba(0,245,212,0.08); color: var(--green); border: 1px solid rgba(0,245,212,0.2); }
+    .sheets-status.err { background: rgba(248,113,113,0.08); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+
+    /* WA TEMPLATE PANEL */
+    .wa-panel {
+      background: rgba(37,211,102,0.04);
+      border: 1px solid rgba(37,211,102,0.18);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .wa-hint { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+    .token-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .token-chip {
+      background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.22);
+      color: #4ade80; border-radius: 6px; padding: 2px 8px; font-size: 11px;
+      cursor: pointer; font-family: 'SF Mono','Fira Code',monospace;
+      transition: background 0.15s;
+    }
+    .token-chip:hover { background: rgba(37,211,102,0.18); }
+
+    /* MAIN */
+    .main {
+      flex: 1; overflow: auto; padding: 24px 28px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .main-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .main-header h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .count-badge {
+      background: rgba(155,93,229,0.15); border: 1px solid rgba(155,93,229,0.3);
+      color: #c4b5fd; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+    }
+
+    /* TOOLBAR */
+    .table-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .search-input {
+      flex: 1; min-width: 180px;
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 9px 14px 9px 34px;
+      font-size: 13px; color: var(--text); outline: none; font-family: inherit;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: 11px center;
+    }
+    .search-input:focus { border-color: rgba(155,93,229,0.4); }
+    .search-input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .filter-select {
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 9px 12px; font-size: 12.5px; color: var(--text);
+      outline: none; font-family: inherit; cursor: pointer;
+    }
+    .filter-select option { background: #161820; }
+
+    /* TABLE */
+    .table-wrap { border: 1px solid var(--border); border-radius: 13px; overflow: hidden; flex: 1; min-height: 300px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--surface2); position: sticky; top: 0; z-index: 5; }
+    th {
+      padding: 12px 14px; text-align: left; font-size: 10.5px; font-weight: 700;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr { transition: background 0.12s; }
+    tbody tr:hover { background: rgba(255,255,255,0.022); }
+
+    .cell-name { font-weight: 600; }
+    .cell-sub  { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+    .ig-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      color: #c4b5fd; text-decoration: none; font-size: 12.5px; transition: color 0.15s;
+    }
+    .ig-link:hover { color: #fff; }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      border-radius: 20px; padding: 3px 9px; font-size: 11.5px; font-weight: 600; white-space: nowrap;
+    }
+    .pill-purple { background: rgba(155,93,229,0.12); border: 1px solid rgba(155,93,229,0.2); color: #c4b5fd; }
+    .pill-muted  { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--muted); }
+    .pill-green  { background: rgba(0,245,212,0.08); border: 1px solid rgba(0,245,212,0.2); color: var(--green); }
+    .pill-yellow { background: rgba(254,228,64,0.08); border: 1px solid rgba(254,228,64,0.2); color: var(--yellow); }
+    .pill-pink   { background: rgba(249,168,212,0.1); border: 1px solid rgba(249,168,212,0.2); color: #f9a8d4; }
+
+    /* WA outreach link */
+    .wa-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.25);
+      color: #4ade80; border-radius: 8px; padding: 5px 10px;
+      font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.15s;
+    }
+    .wa-link:hover { background: rgba(37,211,102,0.18); color: #fff; }
+    .wa-link-no { color: var(--muted); font-size: 12px; }
+
+    .web-link {
+      color: #60a5fa; font-size: 12px; text-decoration: none;
+      max-width: 120px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .web-link:hover { text-decoration: underline; }
+
+    .source-ig  { background: rgba(0,245,212,0.07); border: 1px solid rgba(0,245,212,0.2); color: var(--green); border-radius: 20px; padding: 2px 8px; font-size: 10.5px; font-weight: 600; }
+    .source-yelp { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: var(--muted); border-radius: 20px; padding: 2px 8px; font-size: 10.5px; font-weight: 600; }
+
+    .empty-state { padding: 70px 20px; text-align: center; }
+    .empty-icon { font-size: 44px; margin-bottom: 14px; }
+    .empty-title { font-size: 17px; font-weight: 700; margin-bottom: 7px; }
+    .empty-sub { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 0.8s linear infinite; display: inline-block; }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+      display: none; align-items: center; justify-content: center; z-index: 200;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #161820; border: 1px solid var(--border2);
+      border-radius: 18px; padding: 28px; width: 100%; max-width: 480px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    }
+    .modal h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+    .modal p  { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+    .modal-actions .btn { flex: 1; }
+    .btn-cancel { background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); }
+    .btn-cancel:hover { color: var(--text); }
+    code { background: rgba(155,93,229,0.12); border: 1px solid rgba(155,93,229,0.2); color: #c4b5fd; border-radius: 5px; padding: 1px 6px; font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">📱</div>
+    Instagram Lead Scraper
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge">● Live Dashboard</span>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+
+    <div class="section-title">🔍 Search Settings</div>
+
+    <div>
+      <div class="field-label">Business Niche</div>
+      <input type="text" id="niche" placeholder="e.g. roofing contractors"/>
+      <div class="chips">
+        <span class="chip" onclick="pick('niche',this)">Roofing</span>
+        <span class="chip" onclick="pick('niche',this)">Insurance Brokers</span>
+        <span class="chip" onclick="pick('niche',this)">Real Estate</span>
+        <span class="chip" onclick="pick('niche',this)">HVAC</span>
+        <span class="chip" onclick="pick('niche',this)">Insulation</span>
+        <span class="chip" onclick="pick('niche',this)">Landscaping</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="field-label">Target Location</div>
+      <input type="text" id="location" placeholder="e.g. Toronto, Ontario"/>
+      <div class="chips">
+        <span class="chip" onclick="pick('location',this)">Toronto, ON</span>
+        <span class="chip" onclick="pick('location',this)">Greater Toronto Area</span>
+        <span class="chip" onclick="pick('location',this)">Vancouver, BC</span>
+        <span class="chip" onclick="pick('location',this)">Calgary, AB</span>
+        <span class="chip" onclick="pick('location',this)">Ontario, Canada</span>
+        <span class="chip" onclick="pick('location',this)">New York, USA</span>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="run-btn" onclick="startScrape()">
+      🚀 Find Leads
+    </button>
+
+    <!-- Progress -->
+    <div class="progress-wrap" id="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">Searching Yelp…</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="log-box" id="log-box"></div>
+    </div>
+
+    <!-- Stats -->
+    <div>
+      <div class="field-label" style="margin-bottom:9px">📊 Results Summary</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num purple" id="s-total">0</div><div class="stat-label">Total Leads</div></div>
+        <div class="stat-card"><div class="stat-num green"  id="s-wa">0</div><div class="stat-label">With WA Link</div></div>
+        <div class="stat-card"><div class="stat-num yellow" id="s-email">0</div><div class="stat-label">Emails</div></div>
+        <div class="stat-card"><div class="stat-num pink"   id="s-ig">0</div><div class="stat-label">Instagram</div></div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+    <div class="section-title">📲 WhatsApp Outreach</div>
+
+    <!-- WA Template Panel -->
+    <div class="wa-panel">
+      <div class="field-label">Message Template</div>
+      <textarea id="wa-template" placeholder="Hi {name}, I saw your business on Instagram…">Hi {name}, I came across your business and wanted to reach out about a great opportunity. Would love to connect! 🙌</textarea>
+      <div class="wa-hint">
+        Click a token to insert it into your template:
+      </div>
+      <div class="token-chips">
+        <span class="token-chip" onclick="insertToken('{name}')">  {name}</span>
+        <span class="token-chip" onclick="insertToken('{business}')">  {business}</span>
+        <span class="token-chip" onclick="insertToken('{category}')">  {category}</span>
+      </div>
+      <div class="wa-hint" style="margin-top:2px">
+        Links are auto-generated for every lead with a phone number. Click the 💬 button in the table to open WhatsApp.
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+    <div class="section-title">📊 Google Sheets Upload</div>
+
+    <!-- Sheets Panel -->
+    <div class="sheets-panel">
+      <div class="field-label">Apps Script URL</div>
+      <input type="text" id="sheets-url" placeholder="https://script.google.com/macros/s/…/exec"/>
+      <div class="sheets-hint">
+        Paste your Google Apps Script web app URL here.
+        <a href="#" onclick="showSheetsModal(); return false;">How to set it up →</a>
+      </div>
+      <div class="sheets-status" id="sheets-status"></div>
+      <button class="btn btn-sheets" id="sheets-btn" onclick="pushToSheets()" disabled>
+        ☁️ Upload to Google Sheets
+      </button>
+    </div>
+
+    <button class="btn btn-green" id="export-btn" onclick="exportCSV()" disabled>
+      ⬇️ Download CSV
+    </button>
+
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+    <div class="main-header">
+      <h1>Lead Results</h1>
+      <span class="count-badge" id="count-badge">0 leads found</span>
+    </div>
+
+    <div class="table-toolbar">
+      <input class="search-input" type="text" id="search-box" placeholder="Filter by name, username, phone, email…" oninput="filterTable()"/>
+      <select class="filter-select" id="filter-source" onchange="filterTable()">
+        <option value="">All Sources</option>
+        <option value="Yelp + Instagram">IG + Yelp</option>
+        <option value="Yelp">Yelp Only</option>
+      </select>
+      <select class="filter-select" id="filter-wa" onchange="filterTable()">
+        <option value="">All Leads</option>
+        <option value="yes">Has WA Number</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table id="leads-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Business</th>
+            <th>Instagram</th>
+            <th>Followers</th>
+            <th>Phone</th>
+            <th>💬 WA Outreach</th>
+            <th>Email</th>
+            <th>Website</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="9">
+            <div class="empty-state">
+              <div class="empty-icon">🔍</div>
+              <div class="empty-title">No leads yet</div>
+              <div class="empty-sub">Enter a niche and location,<br/>then click <strong>Find Leads</strong> to start.</div>
+            </div>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- ── SHEETS SETUP MODAL ── -->
+<div class="modal-overlay" id="sheets-modal">
+  <div class="modal">
+    <h3>📊 Google Sheets Setup (One-time)</h3>
+    <p>Follow these steps to push leads directly to your Google Sheet — no API keys needed.</p>
+    <ol style="font-size:13px;color:rgba(255,255,255,0.6);line-height:2;padding-left:18px;">
+      <li>Open a <strong style="color:#fff">Google Sheet</strong> and go to <strong style="color:#fff">Extensions → Apps Script</strong></li>
+      <li>Delete the default code and paste the script below</li>
+      <li>Click <strong style="color:#fff">Deploy → New deployment → Web app</strong></li>
+      <li>Set <em>Who has access</em> to <strong style="color:#fff">Anyone</strong>, click Deploy</li>
+      <li>Copy the web app URL and paste it in the sidebar</li>
+    </ol>
+    <div style="margin-top:14px;background:#0a0a0f;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;font-family:'SF Mono','Fira Code',monospace;font-size:11.5px;color:#a3e635;line-height:1.7;overflow:auto;max-height:200px;">
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  var leads = data.leads;
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(Object.keys(leads[0]));
+  }
+  leads.forEach(function(lead) {
+    sheet.appendRow(Object.values(lead));
+  });
+  return ContentService
+    .createTextOutput(JSON.stringify({ok: true, rows: leads.length}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel" onclick="closeModal()">Close</button>
+      <button class="btn btn-sheets" onclick="copyScript()">📋 Copy Script</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let allLeads = [];
+
+  // ── HELPERS ──
+  function pick(field, el) {
+    document.getElementById(field).value = el.textContent.trim();
+    el.closest('.chips').querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  function insertToken(token) {
+    const ta = document.getElementById('wa-template');
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    ta.value = ta.value.slice(0, start) + token + ta.value.slice(end);
+    ta.selectionStart = ta.selectionEnd = start + token.length;
+    ta.focus();
+  }
+
+  function log(msg, type='') {
+    const box = document.getElementById('log-box');
+    const line = document.createElement('span');
+    line.className = 'log-line ' + type;
+    line.textContent = msg;
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function setProgress(pct, text) {
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+    if (text) document.getElementById('progress-text').textContent = text;
+  }
+
+  function fmt(n) {
+    if (n === 'N/A' || n == null || n === '') return null;
+    const num = parseInt(n);
+    if (isNaN(num)) return null;
+    if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';
+    if (num >= 1000)    return (num/1000).toFixed(1) + 'K';
+    return num.toLocaleString();
+  }
+
+  // Build a wa.me outreach link from a phone number + template
+  function buildWaLink(lead) {
+    const phone = (lead.WhatsApp || lead.Phone || '').replace(/[^\d+]/g, '');
+    if (!phone || phone.length < 7) return null;
+
+    const template = document.getElementById('wa-template').value || 'Hi {name}!';
+    const msg = template
+      .replace(/{name}/g,     lead['Business Name'] || lead.Username || 'there')
+      .replace(/{business}/g, lead['Business Name'] || '')
+      .replace(/{category}/g, lead.Category || 'your business');
+
+    const e164 = phone.startsWith('+') ? phone.slice(1) : phone;
+    return `https://wa.me/${e164}?text=${encodeURIComponent(msg)}`;
+  }
+
+  // ── SCRAPE ──
+  async function startScrape() {
+    const niche    = document.getElementById('niche').value.trim();
+    const location = document.getElementById('location').value.trim();
+    if (!niche || !location) { alert('Please enter both a niche and a location.'); return; }
+
+    allLeads = [];
+    document.getElementById('table-body').innerHTML = '';
+    document.getElementById('log-box').innerHTML = '';
+    ['s-total','s-wa','s-email','s-ig'].forEach(id => document.getElementById(id).textContent = '0');
+    document.getElementById('count-badge').textContent = '0 leads found';
+    document.getElementById('export-btn').disabled = true;
+    document.getElementById('sheets-btn').disabled = true;
+
+    document.getElementById('progress-wrap').style.display = 'block';
+    document.getElementById('run-btn').disabled = true;
+    document.getElementById('run-btn').innerHTML = '<span class="spin">⟳</span> Scraping…';
+
+    setProgress(5, 'Connecting to Yelp…');
+    log('Searching "' + niche + '" in ' + location, 'ok');
+    log('Stage 1: Scraping Yelp listings…');
+    setProgress(20, 'Scanning Yelp pages…');
+
+    try {
+      const res = await fetch('/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ niche, location })
+      });
+
+      setProgress(70, 'Visiting websites + Instagram profiles…');
+      log('Stage 2–4: Fetching websites & Instagram data…');
+
+      if (!res.ok) throw new Error('Server error ' + res.status);
+      const data = await res.json();
+
+      setProgress(95, 'Rendering dashboard…');
+      allLeads = data.leads || [];
+      renderTable(allLeads);
+      updateStats(allLeads);
+
+      setProgress(100, '✅ Done!');
+      log('✅ ' + allLeads.length + ' leads found.', 'ok');
+
+      const hasData = allLeads.length > 0;
+      document.getElementById('export-btn').disabled = !hasData;
+      document.getElementById('sheets-btn').disabled = !hasData;
+
+    } catch(err) {
+      log('❌ ' + err.message, 'err');
+      setProgress(0, 'Error');
+    } finally {
+      document.getElementById('run-btn').disabled = false;
+      document.getElementById('run-btn').innerHTML = '🚀 Find Leads';
+    }
+  }
+
+  // ── RENDER ──
+  function renderTable(leads) {
+    const tbody = document.getElementById('table-body');
+    document.getElementById('count-badge').textContent = leads.length + ' leads found';
+
+    if (!leads.length) {
+      tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state">
+        <div class="empty-icon">😕</div>
+        <div class="empty-title">No leads found</div>
+        <div class="empty-sub">Try a broader niche or location.</div>
+      </div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = leads.map((l, i) => {
+      const followers = fmt(l.Followers);
+      const follPill = followers
+        ? `<span class="pill pill-purple">${followers}</span>`
+        : `<span class="pill pill-muted">N/A</span>`;
+
+      const igCell = l['Instagram URL']
+        ? `<a class="ig-link" href="${l['Instagram URL']}" target="_blank">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            @${l.Username}
+          </a>`
+        : `<span style="color:var(--muted);font-size:12px">—</span>`;
+
+      const phone = l.WhatsApp || l.Phone || '';
+      const phoneCell = phone
+        ? `<span class="pill pill-green">📱 ${phone}</span>`
+        : `<span style="color:var(--muted);font-size:12px">—</span>`;
+
+      // WA outreach link — built from template live
+      const waUrl = buildWaLink(l);
+      const waCell = waUrl
+        ? `<a class="wa-link" href="${waUrl}" target="_blank">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 0C5.372 0 0 5.373 0 12.001c0 2.117.554 4.103 1.523 5.829L.047 23.894a.5.5 0 0 0 .612.612l6.087-1.482A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 11.998 0zm0 21.818a9.818 9.818 0 0 1-5.007-1.373l-.359-.214-3.72.905.934-3.613-.234-.372A9.818 9.818 0 0 1 2.182 12c0-5.422 4.394-9.818 9.818-9.818 5.422 0 9.818 4.396 9.818 9.818 0 5.424-4.396 9.818-9.82 9.818z"/></svg>
+            Open Chat
+          </a>`
+        : `<span class="wa-link-no">No number</span>`;
+
+      const emailCell = l.Email
+        ? `<span class="pill pill-yellow">✉️ ${l.Email}</span>`
+        : `<span style="color:var(--muted);font-size:12px">—</span>`;
+
+      const webCell = l.Website
+        ? `<a class="web-link" href="${l.Website}" target="_blank" title="${l.Website}">${l.Website.replace(/https?:\/\/(www\.)?/,'')}</a>`
+        : `<span style="color:var(--muted);font-size:12px">—</span>`;
+
+      const sourceCell = l.Source === 'Yelp + Instagram'
+        ? `<span class="source-ig">✅ IG+Yelp</span>`
+        : `<span class="source-yelp">Yelp</span>`;
+
+      return `<tr>
+        <td style="color:var(--muted);font-size:11.5px;width:32px">${i+1}</td>
+        <td class="cell-name">
+          ${(l['Business Name']||l.Username||'—').replace(/&/g,'&amp;')}
+          ${l.Category ? `<div class="cell-sub">${l.Category}</div>` : ''}
+        </td>
+        <td>${igCell}</td>
+        <td>${follPill}</td>
+        <td>${phoneCell}</td>
+        <td>${waCell}</td>
+        <td>${emailCell}</td>
+        <td>${webCell}</td>
+        <td>${sourceCell}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function updateStats(leads) {
+    document.getElementById('s-total').textContent = leads.length;
+    document.getElementById('s-wa').textContent    = leads.filter(l => buildWaLink(l)).length;
+    document.getElementById('s-email').textContent  = leads.filter(l => l.Email).length;
+    document.getElementById('s-ig').textContent     = leads.filter(l => l['Instagram URL']).length;
+  }
+
+  // ── FILTER ──
+  function filterTable() {
+    const q       = document.getElementById('search-box').value.toLowerCase();
+    const srcF    = document.getElementById('filter-source').value;
+    const waF     = document.getElementById('filter-wa').value;
+
+    const filtered = allLeads.filter(l => {
+      if (q && !Object.values(l).some(v => String(v).toLowerCase().includes(q))) return false;
+      if (srcF && l.Source !== srcF) return false;
+      if (waF === 'yes' && !buildWaLink(l)) return false;
+      return true;
+    });
+    renderTable(filtered);
+  }
+
+  // Re-render table when template changes so WA links update live
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('wa-template').addEventListener('input', () => {
+      if (allLeads.length) { renderTable(allLeads); updateStats(allLeads); }
+    });
+  });
+
+  // ── EXPORT CSV ──
+  async function exportCSV() {
+    if (!allLeads.length) return;
+    const res = await fetch('/export-csv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ leads: allLeads })
+    });
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'instagram_leads.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── PUSH TO SHEETS ──
+  async function pushToSheets() {
+    const scriptUrl = document.getElementById('sheets-url').value.trim();
+    if (!scriptUrl) { alert('Paste your Google Apps Script URL first.'); return; }
+    if (!allLeads.length) { alert('No leads to upload.'); return; }
+
+    const btn = document.getElementById('sheets-btn');
+    const status = document.getElementById('sheets-status');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin">⟳</span> Uploading…';
+    status.style.display = 'none';
+
+    try {
+      const res = await fetch('/push-to-sheets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ script_url: scriptUrl, leads: allLeads })
+      });
+      const data = await res.json();
+
+      if (data.ok || data.status === 200) {
+        status.textContent = '✅ ' + allLeads.length + ' rows uploaded to Google Sheets!';
+        status.className = 'sheets-status ok';
+      } else {
+        status.textContent = '❌ Upload failed: ' + (data.error || data.response || 'Unknown error');
+        status.className = 'sheets-status err';
+      }
+    } catch(err) {
+      status.textContent = '❌ ' + err.message;
+      status.className = 'sheets-status err';
+    }
+
+    status.style.display = 'block';
+    btn.disabled = false;
+    btn.innerHTML = '☁️ Upload to Google Sheets';
+  }
+
+  // ── SHEETS MODAL ──
+  function showSheetsModal() { document.getElementById('sheets-modal').classList.add('open'); }
+  function closeModal()      { document.getElementById('sheets-modal').classList.remove('open'); }
+
+  function copyScript() {
+    const code = `function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  var leads = data.leads;
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(Object.keys(leads[0]));
+  }
+  leads.forEach(function(lead) {
+    sheet.appendRow(Object.values(lead));
+  });
+  return ContentService
+    .createTextOutput(JSON.stringify({ok: true, rows: leads.length}))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.querySelector('.modal-actions .btn-sheets');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.innerHTML = '📋 Copy Script'; }, 2500);
+    });
+  }
+
+  // Close modal on overlay click
+  document.getElementById('sheets-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+
+</body>
+</html>
