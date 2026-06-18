@@ -19,8 +19,7 @@
       --green: #00f5d4;
       --yellow: #fee440;
       --red: #f87171;
-      --wa: #25D366;
-    }
+      }
 
     body {
       background: var(--bg);
@@ -123,17 +122,6 @@
     }
     .btn-green:hover:not(:disabled) { background: rgba(0,245,212,0.13); }
 
-    .btn-wa {
-      background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.3);
-      color: #25D366;
-    }
-    .btn-wa:hover:not(:disabled) { background: rgba(37,211,102,0.15); }
-
-    .btn-sheets {
-      background: rgba(66,133,244,0.08); border: 1px solid rgba(66,133,244,0.28);
-      color: #60a5fa;
-    }
-    .btn-sheets:hover:not(:disabled) { background: rgba(66,133,244,0.15); }
 
     /* PROGRESS */
     .progress-wrap { display: none; }
@@ -168,47 +156,6 @@
     .stat-num.yellow { color: var(--yellow); }
     .stat-num.pink   { color: #f9a8d4; }
 
-    /* SHEETS PANEL */
-    .sheets-panel {
-      background: rgba(66,133,244,0.05);
-      border: 1px solid rgba(66,133,244,0.18);
-      border-radius: 12px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .sheets-hint {
-      font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6;
-    }
-    .sheets-hint a { color: #60a5fa; text-decoration: none; }
-    .sheets-hint a:hover { text-decoration: underline; }
-    .sheets-status {
-      font-size: 12px; font-weight: 600; padding: 6px 10px;
-      border-radius: 8px; display: none;
-    }
-    .sheets-status.ok  { background: rgba(0,245,212,0.08); color: var(--green); border: 1px solid rgba(0,245,212,0.2); }
-    .sheets-status.err { background: rgba(248,113,113,0.08); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
-
-    /* WA TEMPLATE PANEL */
-    .wa-panel {
-      background: rgba(37,211,102,0.04);
-      border: 1px solid rgba(37,211,102,0.18);
-      border-radius: 12px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .wa-hint { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6; }
-    .token-chips { display: flex; flex-wrap: wrap; gap: 5px; }
-    .token-chip {
-      background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.22);
-      color: #4ade80; border-radius: 6px; padding: 2px 8px; font-size: 11px;
-      cursor: pointer; font-family: 'SF Mono','Fira Code',monospace;
-      transition: background 0.15s;
-    }
-    .token-chip:hover { background: rgba(37,211,102,0.18); }
 
     /* MAIN */
     .main {
@@ -275,15 +222,6 @@
     .pill-yellow { background: rgba(254,228,64,0.08); border: 1px solid rgba(254,228,64,0.2); color: var(--yellow); }
     .pill-pink   { background: rgba(249,168,212,0.1); border: 1px solid rgba(249,168,212,0.2); color: #f9a8d4; }
 
-    /* WA outreach link */
-    .wa-link {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: rgba(37,211,102,0.08); border: 1px solid rgba(37,211,102,0.25);
-      color: #4ade80; border-radius: 8px; padding: 5px 10px;
-      font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.15s;
-    }
-    .wa-link:hover { background: rgba(37,211,102,0.18); color: #fff; }
-    .wa-link-no { color: var(--muted); font-size: 12px; }
 
     .web-link {
       color: #60a5fa; font-size: 12px; text-decoration: none;
@@ -302,25 +240,6 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .spin { animation: spin 0.8s linear infinite; display: inline-block; }
 
-    /* MODAL */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-      display: none; align-items: center; justify-content: center; z-index: 200;
-      backdrop-filter: blur(4px);
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: #161820; border: 1px solid var(--border2);
-      border-radius: 18px; padding: 28px; width: 100%; max-width: 480px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
-    }
-    .modal h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
-    .modal p  { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
-    .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
-    .modal-actions .btn { flex: 1; }
-    .btn-cancel { background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); }
-    .btn-cancel:hover { color: var(--text); }
-    code { background: rgba(155,93,229,0.12); border: 1px solid rgba(155,93,229,0.2); color: #c4b5fd; border-radius: 5px; padding: 1px 6px; font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; }
 
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -393,47 +312,9 @@
       <div class="field-label" style="margin-bottom:9px">📊 Results Summary</div>
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-num purple" id="s-total">0</div><div class="stat-label">Total Leads</div></div>
-        <div class="stat-card"><div class="stat-num green"  id="s-wa">0</div><div class="stat-label">With WA Link</div></div>
         <div class="stat-card"><div class="stat-num yellow" id="s-email">0</div><div class="stat-label">Emails</div></div>
         <div class="stat-card"><div class="stat-num pink"   id="s-ig">0</div><div class="stat-label">Instagram</div></div>
       </div>
-    </div>
-
-    <div class="section-divider"></div>
-    <div class="section-title">📲 WhatsApp Outreach</div>
-
-    <!-- WA Template Panel -->
-    <div class="wa-panel">
-      <div class="field-label">Message Template</div>
-      <textarea id="wa-template" placeholder="Hi {name}, I saw your business on Instagram…">Hi {name}, I came across your business and wanted to reach out about a great opportunity. Would love to connect! 🙌</textarea>
-      <div class="wa-hint">
-        Click a token to insert it into your template:
-      </div>
-      <div class="token-chips">
-        <span class="token-chip" onclick="insertToken('{name}')">  {name}</span>
-        <span class="token-chip" onclick="insertToken('{business}')">  {business}</span>
-        <span class="token-chip" onclick="insertToken('{category}')">  {category}</span>
-      </div>
-      <div class="wa-hint" style="margin-top:2px">
-        Links are auto-generated for every lead with a phone number. Click the 💬 button in the table to open WhatsApp.
-      </div>
-    </div>
-
-    <div class="section-divider"></div>
-    <div class="section-title">📊 Google Sheets Upload</div>
-
-    <!-- Sheets Panel -->
-    <div class="sheets-panel">
-      <div class="field-label">Apps Script URL</div>
-      <input type="text" id="sheets-url" placeholder="https://script.google.com/macros/s/…/exec"/>
-      <div class="sheets-hint">
-        Paste your Google Apps Script web app URL here.
-        <a href="#" onclick="showSheetsModal(); return false;">How to set it up →</a>
-      </div>
-      <div class="sheets-status" id="sheets-status"></div>
-      <button class="btn btn-sheets" id="sheets-btn" onclick="pushToSheets()" disabled>
-        ☁️ Upload to Google Sheets
-      </button>
     </div>
 
     <button class="btn btn-green" id="export-btn" onclick="exportCSV()" disabled>
@@ -456,10 +337,6 @@
         <option value="Yelp + Instagram">IG + Yelp</option>
         <option value="Yelp">Yelp Only</option>
       </select>
-      <select class="filter-select" id="filter-wa" onchange="filterTable()">
-        <option value="">All Leads</option>
-        <option value="yes">Has WA Number</option>
-      </select>
     </div>
 
     <div class="table-wrap">
@@ -471,14 +348,13 @@
             <th>Instagram</th>
             <th>Followers</th>
             <th>Phone</th>
-            <th>💬 WA Outreach</th>
             <th>Email</th>
             <th>Website</th>
             <th>Source</th>
           </tr>
         </thead>
         <tbody id="table-body">
-          <tr><td colspan="9">
+          <tr><td colspan="8">
             <div class="empty-state">
               <div class="empty-icon">🔍</div>
               <div class="empty-title">No leads yet</div>
@@ -491,40 +367,6 @@
   </main>
 </div>
 
-<!-- ── SHEETS SETUP MODAL ── -->
-<div class="modal-overlay" id="sheets-modal">
-  <div class="modal">
-    <h3>📊 Google Sheets Setup (One-time)</h3>
-    <p>Follow these steps to push leads directly to your Google Sheet — no API keys needed.</p>
-    <ol style="font-size:13px;color:rgba(255,255,255,0.6);line-height:2;padding-left:18px;">
-      <li>Open a <strong style="color:#fff">Google Sheet</strong> and go to <strong style="color:#fff">Extensions → Apps Script</strong></li>
-      <li>Delete the default code and paste the script below</li>
-      <li>Click <strong style="color:#fff">Deploy → New deployment → Web app</strong></li>
-      <li>Set <em>Who has access</em> to <strong style="color:#fff">Anyone</strong>, click Deploy</li>
-      <li>Copy the web app URL and paste it in the sidebar</li>
-    </ol>
-    <div style="margin-top:14px;background:#0a0a0f;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;font-family:'SF Mono','Fira Code',monospace;font-size:11.5px;color:#a3e635;line-height:1.7;overflow:auto;max-height:200px;">
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  var leads = data.leads;
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(Object.keys(leads[0]));
-  }
-  leads.forEach(function(lead) {
-    sheet.appendRow(Object.values(lead));
-  });
-  return ContentService
-    .createTextOutput(JSON.stringify({ok: true, rows: leads.length}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-cancel" onclick="closeModal()">Close</button>
-      <button class="btn btn-sheets" onclick="copyScript()">📋 Copy Script</button>
-    </div>
-  </div>
-</div>
 
 <script>
   let allLeads = [];
@@ -568,21 +410,6 @@ function doPost(e) {
     return num.toLocaleString();
   }
 
-  // Build a wa.me outreach link from a phone number + template
-  function buildWaLink(lead) {
-    const phone = (lead.WhatsApp || lead.Phone || '').replace(/[^\d+]/g, '');
-    if (!phone || phone.length < 7) return null;
-
-    const template = document.getElementById('wa-template').value || 'Hi {name}!';
-    const msg = template
-      .replace(/{name}/g,     lead['Business Name'] || lead.Username || 'there')
-      .replace(/{business}/g, lead['Business Name'] || '')
-      .replace(/{category}/g, lead.Category || 'your business');
-
-    const e164 = phone.startsWith('+') ? phone.slice(1) : phone;
-    return `https://wa.me/${e164}?text=${encodeURIComponent(msg)}`;
-  }
-
   // ── SCRAPE ──
   async function startScrape() {
     const niche    = document.getElementById('niche').value.trim();
@@ -595,7 +422,6 @@ function doPost(e) {
     ['s-total','s-wa','s-email','s-ig'].forEach(id => document.getElementById(id).textContent = '0');
     document.getElementById('count-badge').textContent = '0 leads found';
     document.getElementById('export-btn').disabled = true;
-    document.getElementById('sheets-btn').disabled = true;
 
     document.getElementById('progress-wrap').style.display = 'block';
     document.getElementById('run-btn').disabled = true;
@@ -629,7 +455,6 @@ function doPost(e) {
 
       const hasData = allLeads.length > 0;
       document.getElementById('export-btn').disabled = !hasData;
-      document.getElementById('sheets-btn').disabled = !hasData;
 
     } catch(err) {
       log('❌ ' + err.message, 'err');
@@ -646,7 +471,7 @@ function doPost(e) {
     document.getElementById('count-badge').textContent = leads.length + ' leads found';
 
     if (!leads.length) {
-      tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state">
+      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
         <div class="empty-icon">😕</div>
         <div class="empty-title">No leads found</div>
         <div class="empty-sub">Try a broader niche or location.</div>
@@ -672,15 +497,6 @@ function doPost(e) {
         ? `<span class="pill pill-green">📱 ${phone}</span>`
         : `<span style="color:var(--muted);font-size:12px">—</span>`;
 
-      // WA outreach link — built from template live
-      const waUrl = buildWaLink(l);
-      const waCell = waUrl
-        ? `<a class="wa-link" href="${waUrl}" target="_blank">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 0C5.372 0 0 5.373 0 12.001c0 2.117.554 4.103 1.523 5.829L.047 23.894a.5.5 0 0 0 .612.612l6.087-1.482A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 11.998 0zm0 21.818a9.818 9.818 0 0 1-5.007-1.373l-.359-.214-3.72.905.934-3.613-.234-.372A9.818 9.818 0 0 1 2.182 12c0-5.422 4.394-9.818 9.818-9.818 5.422 0 9.818 4.396 9.818 9.818 0 5.424-4.396 9.818-9.82 9.818z"/></svg>
-            Open Chat
-          </a>`
-        : `<span class="wa-link-no">No number</span>`;
-
       const emailCell = l.Email
         ? `<span class="pill pill-yellow">✉️ ${l.Email}</span>`
         : `<span style="color:var(--muted);font-size:12px">—</span>`;
@@ -702,7 +518,6 @@ function doPost(e) {
         <td>${igCell}</td>
         <td>${follPill}</td>
         <td>${phoneCell}</td>
-        <td>${waCell}</td>
         <td>${emailCell}</td>
         <td>${webCell}</td>
         <td>${sourceCell}</td>
@@ -712,7 +527,6 @@ function doPost(e) {
 
   function updateStats(leads) {
     document.getElementById('s-total').textContent = leads.length;
-    document.getElementById('s-wa').textContent    = leads.filter(l => buildWaLink(l)).length;
     document.getElementById('s-email').textContent  = leads.filter(l => l.Email).length;
     document.getElementById('s-ig').textContent     = leads.filter(l => l['Instagram URL']).length;
   }
@@ -721,23 +535,14 @@ function doPost(e) {
   function filterTable() {
     const q       = document.getElementById('search-box').value.toLowerCase();
     const srcF    = document.getElementById('filter-source').value;
-    const waF     = document.getElementById('filter-wa').value;
 
     const filtered = allLeads.filter(l => {
       if (q && !Object.values(l).some(v => String(v).toLowerCase().includes(q))) return false;
       if (srcF && l.Source !== srcF) return false;
-      if (waF === 'yes' && !buildWaLink(l)) return false;
       return true;
     });
     renderTable(filtered);
   }
-
-  // Re-render table when template changes so WA links update live
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('wa-template').addEventListener('input', () => {
-      if (allLeads.length) { renderTable(allLeads); updateStats(allLeads); }
-    });
-  });
 
   // ── EXPORT CSV ──
   async function exportCSV() {
@@ -754,73 +559,6 @@ function doPost(e) {
     URL.revokeObjectURL(url);
   }
 
-  // ── PUSH TO SHEETS ──
-  async function pushToSheets() {
-    const scriptUrl = document.getElementById('sheets-url').value.trim();
-    if (!scriptUrl) { alert('Paste your Google Apps Script URL first.'); return; }
-    if (!allLeads.length) { alert('No leads to upload.'); return; }
-
-    const btn = document.getElementById('sheets-btn');
-    const status = document.getElementById('sheets-status');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spin">⟳</span> Uploading…';
-    status.style.display = 'none';
-
-    try {
-      const res = await fetch('/push-to-sheets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ script_url: scriptUrl, leads: allLeads })
-      });
-      const data = await res.json();
-
-      if (data.ok || data.status === 200) {
-        status.textContent = '✅ ' + allLeads.length + ' rows uploaded to Google Sheets!';
-        status.className = 'sheets-status ok';
-      } else {
-        status.textContent = '❌ Upload failed: ' + (data.error || data.response || 'Unknown error');
-        status.className = 'sheets-status err';
-      }
-    } catch(err) {
-      status.textContent = '❌ ' + err.message;
-      status.className = 'sheets-status err';
-    }
-
-    status.style.display = 'block';
-    btn.disabled = false;
-    btn.innerHTML = '☁️ Upload to Google Sheets';
-  }
-
-  // ── SHEETS MODAL ──
-  function showSheetsModal() { document.getElementById('sheets-modal').classList.add('open'); }
-  function closeModal()      { document.getElementById('sheets-modal').classList.remove('open'); }
-
-  function copyScript() {
-    const code = `function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  var leads = data.leads;
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(Object.keys(leads[0]));
-  }
-  leads.forEach(function(lead) {
-    sheet.appendRow(Object.values(lead));
-  });
-  return ContentService
-    .createTextOutput(JSON.stringify({ok: true, rows: leads.length}))
-    .setMimeType(ContentService.MimeType.JSON);
-}`;
-    navigator.clipboard.writeText(code).then(() => {
-      const btn = document.querySelector('.modal-actions .btn-sheets');
-      btn.textContent = '✅ Copied!';
-      setTimeout(() => { btn.innerHTML = '📋 Copy Script'; }, 2500);
-    });
-  }
-
-  // Close modal on overlay click
-  document.getElementById('sheets-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-  });
 </script>
 
 </body>
