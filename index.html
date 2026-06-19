@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Instagram Lead Scraper Dashboard</title>
+  <title>Instant Scraper Dashboard</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -196,8 +196,8 @@
 
 <nav>
   <div class="nav-logo">
-    <div class="nav-logo-icon">📱</div>
-    Instagram Lead Scraper
+    <div class="nav-logo-icon">⚡</div>
+    Instant Scraper
   </div>
   <div class="nav-right">
     <span class="nav-badge">● Live Dashboard</span>
@@ -241,10 +241,19 @@
 
     <div>
       <div class="field-label" style="margin-bottom:9px">📊 Results Summary</div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num purple" id="s-total">0</div><div class="stat-label">Total Leads</div></div>
-        <div class="stat-card"><div class="stat-num yellow" id="s-phone">0</div><div class="stat-label">With Phone</div></div>
-        <div class="stat-card"><div class="stat-num pink"   id="s-rated">0</div><div class="stat-label">With Rating</div></div>
+      <div class="stats-grid" style="grid-template-columns: 1fr; gap: 8px;">
+        <div class="stat-card" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px;">
+          <div class="stat-label" style="margin-top:0">Total Leads</div>
+          <div class="stat-num purple" id="s-total">0</div>
+        </div>
+        <div class="stat-card" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px;">
+          <div class="stat-label" style="margin-top:0">Facebook Profiles</div>
+          <div class="stat-num yellow" id="s-facebook">0</div>
+        </div>
+        <div class="stat-card" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px;">
+          <div class="stat-label" style="margin-top:0">Instagram Profiles</div>
+          <div class="stat-num pink" id="s-instagram">0</div>
+        </div>
       </div>
     </div>
 
@@ -275,7 +284,8 @@
       <input class="search-input" type="text" id="search-box" placeholder="Filter by name, phone, address…" oninput="filterTable()"/>
       <select class="filter-select" id="filter-rated" onchange="filterTable()">
         <option value="">All Leads</option>
-        <option value="rated">Has Rating</option>
+        <option value="facebook">Has Facebook</option>
+        <option value="instagram">Has Instagram</option>
         <option value="phone">Has Phone</option>
       </select>
     </div>
@@ -288,10 +298,11 @@
             <th>Business</th>
             <th>Category</th>
             <th>Phone</th>
+            <th>Instagram</th>
+            <th>Facebook</th>
             <th>Address</th>
             <th>Rating</th>
-            <th>Reviews</th>
-            <th>Yelp Page</th>
+            <th>Website</th>
           </tr>
         </thead>
         <tbody id="table-body">
@@ -346,8 +357,8 @@
     document.getElementById('table-body').innerHTML = '';
     document.getElementById('log-box').innerHTML    = '';
     document.getElementById('s-total').textContent  = '0';
-    document.getElementById('s-phone').textContent  = '0';
-    document.getElementById('s-rated').textContent  = '0';
+    document.getElementById('s-facebook').textContent = '0';
+    document.getElementById('s-instagram').textContent = '0';
     document.getElementById('count-badge').textContent = '0 leads found';
     document.getElementById('export-btn').disabled  = true;
 
@@ -403,27 +414,46 @@
     const tbody = document.getElementById('table-body');
 
     if (!leads.length) {
-      tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">😕</div><div class="empty-title">No leads found</div><div class="empty-sub">Try a broader niche or different location.</div></div></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">😕</div><div class="empty-title">No leads found</div><div class="empty-sub">Try a broader niche or different location.</div></div></td></tr>';
       return;
     }
 
-    tbody.innerHTML = leads.map((l, i) => `
+    tbody.innerHTML = leads.map((l, i) => {
+      const igUrl = l['Instagram Profile Link'];
+      const igCell = igUrl
+        ? `<a class="web-link" href="${igUrl}" target="_blank" style="color: #f9a8d4; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            Instagram
+           </a>`
+        : `<span style="color:var(--muted)">—</span>`;
+
+      const fbUrl = l['Facebook Profile Link'];
+      const fbCell = fbUrl
+        ? `<a class="web-link" href="${fbUrl}" target="_blank" style="color: #60a5fa; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            Facebook
+           </a>`
+        : `<span style="color:var(--muted)">—</span>`;
+
+      return `
       <tr>
         <td style="color:var(--muted);font-size:11.5px">${i + 1}</td>
         <td class="cell-name">${esc(l['Business Name'])}</td>
         <td style="font-size:12px;color:var(--muted)">${l.Category || '—'}</td>
         <td>${l.Phone ? '<span class="pill pill-green">📱 ' + l.Phone + '</span>' : '<span style="color:var(--muted)">—</span>'}</td>
+        <td>${igCell}</td>
+        <td>${fbCell}</td>
         <td style="font-size:12px">${l.Address || '—'}</td>
         <td>${l.Rating ? '<span class="pill pill-yellow">⭐ ' + l.Rating + '</span>' : '—'}</td>
-        <td>${l.Reviews ? '<span class="pill pill-muted">' + l.Reviews + '</span>' : '—'}</td>
-        <td>${l.Website ? '<a class="web-link" href="' + l.Website + '" target="_blank">View on Yelp</a>' : '—'}</td>
-      </tr>`).join('');
+        <td>${l.Website ? '<a class="web-link" href="' + l.Website + '" target="_blank">Visit Site</a>' : '—'}</td>
+      </tr>`;
+    }).join('');
   }
 
   function updateStats(leads) {
     document.getElementById('s-total').textContent = leads.length;
-    document.getElementById('s-phone').textContent = leads.filter(l => l.Phone).length;
-    document.getElementById('s-rated').textContent = leads.filter(l => l.Rating).length;
+    document.getElementById('s-facebook').textContent = leads.filter(l => l['Facebook Profile Link']).length;
+    document.getElementById('s-instagram').textContent = leads.filter(l => l['Instagram Profile Link']).length;
   }
 
   function filterTable() {
@@ -431,7 +461,8 @@
     const fil = document.getElementById('filter-rated').value;
     const filtered = allLeads.filter(l => {
       if (q && !Object.values(l).some(v => String(v).toLowerCase().includes(q))) return false;
-      if (fil === 'rated' && !l.Rating) return false;
+      if (fil === 'facebook' && !l['Facebook Profile Link']) return false;
+      if (fil === 'instagram' && !l['Instagram Profile Link']) return false;
       if (fil === 'phone' && !l.Phone)  return false;
       return true;
     });
