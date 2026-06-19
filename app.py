@@ -9,7 +9,7 @@ import io
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder=BASE_DIR, static_url_path="")
 
-YELP_API_KEY = os.environ.get("YELP_API_KEY", "")
+YELP_API_KEY = os.environ.get("YELP_API_KEY", "VBeaGGKDiSdCzAfbi_ouJc7HlapwrDFALu7Rjos7zCMQsJvllkb2RLYvGLtYsx5rm-KoUmBLcx9j5rzGEs56UiUIvfqdNIw2AEhczcxc01_Y85I8uumIsrrTm-E0anYx")
 YELP_HEADERS = {
     "Authorization": f"Bearer {YELP_API_KEY}",
     "Accept": "application/json",
@@ -62,7 +62,10 @@ def yelp_search(niche, location, limit=50):
 
 @app.route("/")
 def index():
-    return send_from_directory(BASE_DIR, "dashboard.html")
+    resp = send_from_directory(BASE_DIR, "dashboard.html")
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    resp.headers["Pragma"] = "no-cache"
+    return resp
 
 
 @app.route("/scrape", methods=["POST"])
