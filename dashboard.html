@@ -19,18 +19,14 @@
       --green: #00f5d4;
       --yellow: #fee440;
       --red: #f87171;
-      }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
-    /* NAV */
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+
     nav {
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 28px; height: 58px;
@@ -45,17 +41,13 @@
       background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
       display: flex; align-items: center; justify-content: center; font-size: 14px;
     }
-    .nav-right { display: flex; align-items: center; gap: 10px; }
     .nav-badge {
       background: rgba(0,245,212,0.1); border: 1px solid rgba(0,245,212,0.25);
-      color: var(--green); font-size: 11px; font-weight: 600; padding: 3px 9px;
-      border-radius: 20px;
+      color: var(--green); font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px;
     }
 
-    /* LAYOUT */
-    .layout { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+    .layout { display: flex; flex: 1; min-height: 0; }
 
-    /* SIDEBAR */
     .sidebar {
       width: 300px; flex-shrink: 0;
       border-right: 1px solid var(--border);
@@ -65,32 +57,21 @@
     .section-title {
       font-size: 11px; font-weight: 700; color: var(--muted);
       text-transform: uppercase; letter-spacing: 1px;
-      display: flex; align-items: center; gap: 6px;
     }
-    .section-divider {
-      height: 1px; background: var(--border); margin: 2px 0;
-    }
-
     .field-label {
       font-size: 11px; font-weight: 600; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.7px;
-      margin-bottom: 7px;
+      text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 7px;
     }
 
-    input[type="text"], textarea {
+    input[type="text"] {
       width: 100%; background: var(--surface2);
       border: 1px solid var(--border2); border-radius: 10px;
       padding: 11px 13px; font-size: 13.5px; color: var(--text);
       outline: none; font-family: inherit;
       transition: border-color 0.2s, box-shadow 0.2s;
-      caret-color: var(--accent);
     }
-    textarea { resize: vertical; min-height: 72px; font-size: 12.5px; line-height: 1.6; }
-    input:focus, textarea:focus {
-      border-color: rgba(155,93,229,0.5);
-      box-shadow: 0 0 0 3px rgba(155,93,229,0.08);
-    }
-    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.18); }
+    input:focus { border-color: rgba(155,93,229,0.5); box-shadow: 0 0 0 3px rgba(155,93,229,0.08); }
+    input::placeholder { color: rgba(255,255,255,0.18); }
 
     .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
     .chip {
@@ -101,7 +82,6 @@
     .chip:hover { border-color: var(--accent); color: var(--accent); }
     .chip.on { background: rgba(155,93,229,0.15); border-color: rgba(155,93,229,0.4); color: #c4b5fd; }
 
-    /* BUTTONS */
     .btn {
       width: 100%; padding: 13px; border: none; border-radius: 11px;
       font-size: 13.5px; font-weight: 700; cursor: pointer;
@@ -109,59 +89,25 @@
       transition: all 0.22s; font-family: inherit;
     }
     .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
-
     .btn-primary {
       background: linear-gradient(135deg, #833ab4 0%, #c2185b 60%, #f57c00 100%);
       color: #fff; box-shadow: 0 5px 20px rgba(131,58,180,0.28);
     }
     .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(131,58,180,0.4); }
-
     .btn-green {
-      background: rgba(0,245,212,0.07); border: 1px solid rgba(0,245,212,0.28);
-      color: var(--green);
+      background: rgba(0,245,212,0.07); border: 1px solid rgba(0,245,212,0.28); color: var(--green);
     }
     .btn-green:hover:not(:disabled) { background: rgba(0,245,212,0.13); }
 
-
-    /* PROGRESS */
-    .progress-wrap { display: none; }
-    .progress-label { font-size: 11.5px; color: var(--muted); margin-bottom: 7px; display: flex; justify-content: space-between; }
-    .progress-bar-bg { height: 5px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
-    .progress-bar-fill {
-      height: 100%; background: linear-gradient(90deg, #833ab4, #f57c00);
-      border-radius: 99px; width: 0%; transition: width 0.4s ease;
-    }
-    .log-box {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 9px; padding: 10px 12px; max-height: 110px;
-      overflow-y: auto; font-size: 11px; color: var(--muted);
-      font-family: 'SF Mono','Fira Code',monospace; line-height: 1.8;
-      margin-top: 8px;
-    }
-    .log-line { display: block; }
-    .log-line.ok { color: var(--green); }
-    .log-line.warn { color: var(--yellow); }
-    .log-line.err { color: var(--red); }
-
-    /* STATS */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .stat-card {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 11px; padding: 12px 10px; text-align: center;
-    }
+    .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 11px; padding: 12px 10px; text-align: center; }
     .stat-num { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
     .stat-label { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
     .stat-num.purple { color: #c4b5fd; }
-    .stat-num.green  { color: var(--green); }
     .stat-num.yellow { color: var(--yellow); }
     .stat-num.pink   { color: #f9a8d4; }
 
-
-    /* MAIN */
-    .main {
-      flex: 1; overflow: auto; padding: 24px 28px;
-      display: flex; flex-direction: column; gap: 16px;
-    }
+    .main { flex: 1; overflow: auto; padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
     .main-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
     .main-header h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
     .count-badge {
@@ -169,27 +115,43 @@
       color: #c4b5fd; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
     }
 
-    /* TOOLBAR */
+    /* PROGRESS — hidden by default, shown via .active class */
+    .progress-wrap {
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 12px; padding: 16px;
+      display: none;
+    }
+    .progress-wrap.active { display: block; }
+    .progress-label { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; display: flex; justify-content: space-between; }
+    .progress-bar-bg { height: 6px; background: var(--bg); border-radius: 99px; overflow: hidden; }
+    .progress-bar-fill {
+      height: 100%; background: linear-gradient(90deg, #833ab4, #f57c00);
+      border-radius: 99px; width: 0%; transition: width 0.5s ease;
+    }
+    .log-box {
+      margin-top: 10px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px; max-height: 90px;
+      overflow-y: auto; font-size: 11px; color: var(--muted);
+      font-family: 'SF Mono','Fira Code',monospace; line-height: 1.9;
+    }
+    .log-line { display: block; }
+    .log-line.ok  { color: var(--green); }
+    .log-line.err { color: var(--red); }
+
     .table-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .search-input {
-      flex: 1; min-width: 180px;
-      background: var(--surface2); border: 1px solid var(--border2);
-      border-radius: 10px; padding: 9px 14px 9px 34px;
-      font-size: 13px; color: var(--text); outline: none; font-family: inherit;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: 11px center;
+      flex: 1; min-width: 180px; background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 9px 14px; font-size: 13px; color: var(--text);
+      outline: none; font-family: inherit;
     }
     .search-input:focus { border-color: rgba(155,93,229,0.4); }
     .search-input::placeholder { color: rgba(255,255,255,0.2); }
-
     .filter-select {
       background: var(--surface2); border: 1px solid var(--border2);
       border-radius: 10px; padding: 9px 12px; font-size: 12.5px; color: var(--text);
       outline: none; font-family: inherit; cursor: pointer;
     }
-    .filter-select option { background: #161820; }
 
-    /* TABLE */
     .table-wrap { border: 1px solid var(--border); border-radius: 13px; overflow: hidden; flex: 1; min-height: 300px; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     thead { background: var(--surface2); position: sticky; top: 0; z-index: 5; }
@@ -200,37 +162,22 @@
     }
     td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
-    tbody tr { transition: background 0.12s; }
     tbody tr:hover { background: rgba(255,255,255,0.022); }
-
     .cell-name { font-weight: 600; }
-    .cell-sub  { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
-
-    .ig-link {
-      display: inline-flex; align-items: center; gap: 4px;
-      color: #c4b5fd; text-decoration: none; font-size: 12.5px; transition: color 0.15s;
-    }
-    .ig-link:hover { color: #fff; }
 
     .pill {
       display: inline-flex; align-items: center; gap: 4px;
       border-radius: 20px; padding: 3px 9px; font-size: 11.5px; font-weight: 600; white-space: nowrap;
     }
-    .pill-purple { background: rgba(155,93,229,0.12); border: 1px solid rgba(155,93,229,0.2); color: #c4b5fd; }
-    .pill-muted  { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--muted); }
     .pill-green  { background: rgba(0,245,212,0.08); border: 1px solid rgba(0,245,212,0.2); color: var(--green); }
     .pill-yellow { background: rgba(254,228,64,0.08); border: 1px solid rgba(254,228,64,0.2); color: var(--yellow); }
-    .pill-pink   { background: rgba(249,168,212,0.1); border: 1px solid rgba(249,168,212,0.2); color: #f9a8d4; }
-
+    .pill-muted  { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--muted); }
 
     .web-link {
       color: #60a5fa; font-size: 12px; text-decoration: none;
       max-width: 120px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .web-link:hover { text-decoration: underline; }
-
-    .source-ig  { background: rgba(0,245,212,0.07); border: 1px solid rgba(0,245,212,0.2); color: var(--green); border-radius: 20px; padding: 2px 8px; font-size: 10.5px; font-weight: 600; }
-    .source-yelp { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: var(--muted); border-radius: 20px; padding: 2px 8px; font-size: 10.5px; font-weight: 600; }
 
     .empty-state { padding: 70px 20px; text-align: center; }
     .empty-icon { font-size: 44px; margin-bottom: 14px; }
@@ -240,16 +187,13 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .spin { animation: spin 0.8s linear infinite; display: inline-block; }
 
-
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
   </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
 <nav>
   <div class="nav-logo">
     <div class="nav-logo-icon">📱</div>
@@ -262,9 +206,7 @@
 
 <div class="layout">
 
-  <!-- ── SIDEBAR ── -->
   <aside class="sidebar">
-
     <div class="section-title">🔍 Search Settings</div>
 
     <div>
@@ -282,14 +224,14 @@
 
     <div>
       <div class="field-label">Target Location</div>
-      <input type="text" id="location" placeholder="e.g. Toronto, Ontario"/>
+      <input type="text" id="location-input" placeholder="e.g. Toronto, Ontario"/>
       <div class="chips">
-        <span class="chip" onclick="pick('location',this)">Toronto, ON</span>
-        <span class="chip" onclick="pick('location',this)">Greater Toronto Area</span>
-        <span class="chip" onclick="pick('location',this)">Vancouver, BC</span>
-        <span class="chip" onclick="pick('location',this)">Calgary, AB</span>
-        <span class="chip" onclick="pick('location',this)">Ontario, Canada</span>
-        <span class="chip" onclick="pick('location',this)">New York, USA</span>
+        <span class="chip" onclick="pick('location-input',this)">Toronto, ON</span>
+        <span class="chip" onclick="pick('location-input',this)">Greater Toronto Area</span>
+        <span class="chip" onclick="pick('location-input',this)">Vancouver, BC</span>
+        <span class="chip" onclick="pick('location-input',this)">Calgary, AB</span>
+        <span class="chip" onclick="pick('location-input',this)">Ontario, Canada</span>
+        <span class="chip" onclick="pick('location-input',this)">New York, USA</span>
       </div>
     </div>
 
@@ -297,50 +239,49 @@
       🚀 Find Leads
     </button>
 
-    <!-- Stats -->
     <div>
       <div class="field-label" style="margin-bottom:9px">📊 Results Summary</div>
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-num purple" id="s-total">0</div><div class="stat-label">Total Leads</div></div>
-        <div class="stat-card"><div class="stat-num yellow" id="s-email">0</div><div class="stat-label">With Phone</div></div>
-        <div class="stat-card"><div class="stat-num pink"   id="s-ig">0</div><div class="stat-label">With Rating</div></div>
+        <div class="stat-card"><div class="stat-num yellow" id="s-phone">0</div><div class="stat-label">With Phone</div></div>
+        <div class="stat-card"><div class="stat-num pink"   id="s-rated">0</div><div class="stat-label">With Rating</div></div>
       </div>
     </div>
 
     <button class="btn btn-green" id="export-btn" onclick="exportCSV()" disabled>
       ⬇️ Download CSV
     </button>
-
   </aside>
 
-  <!-- ── MAIN ── -->
   <main class="main">
     <div class="main-header">
       <h1>Lead Results</h1>
       <span class="count-badge" id="count-badge">0 leads found</span>
     </div>
 
-    <!-- Progress -->
+    <!-- Progress bar — shown when scraping -->
     <div class="progress-wrap" id="progress-wrap">
       <div class="progress-label">
-        <span id="progress-text">Searching Yelp…</span>
+        <span id="progress-text">Connecting to Yelp…</span>
         <span id="progress-pct">0%</span>
       </div>
-      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
       <div class="log-box" id="log-box"></div>
     </div>
 
     <div class="table-toolbar">
-      <input class="search-input" type="text" id="search-box" placeholder="Filter by name, username, phone, email…" oninput="filterTable()"/>
-      <select class="filter-select" id="filter-source" onchange="filterTable()">
-        <option value="">All Sources</option>
-        <option value="Yelp + Instagram">IG + Yelp</option>
-        <option value="Yelp">Yelp Only</option>
+      <input class="search-input" type="text" id="search-box" placeholder="Filter by name, phone, address…" oninput="filterTable()"/>
+      <select class="filter-select" id="filter-rated" onchange="filterTable()">
+        <option value="">All Leads</option>
+        <option value="rated">Has Rating</option>
+        <option value="phone">Has Phone</option>
       </select>
     </div>
 
     <div class="table-wrap">
-      <table id="leads-table">
+      <table>
         <thead>
           <tr>
             <th>#</th>
@@ -358,7 +299,7 @@
             <div class="empty-state">
               <div class="empty-icon">🔍</div>
               <div class="empty-title">No leads yet</div>
-              <div class="empty-sub">Enter a niche and location,<br/>then click <strong>Find Leads</strong> to start.</div>
+              <div class="empty-sub">Select a niche and location,<br/>then click <strong>Find Leads</strong>.</div>
             </div>
           </td></tr>
         </tbody>
@@ -367,202 +308,153 @@
   </main>
 </div>
 
-
 <script>
   let allLeads = [];
 
-  // ── HELPERS ──
-  function pick(field, el) {
-    document.getElementById(field).value = el.textContent.trim();
+  function pick(fieldId, el) {
+    document.getElementById(fieldId).value = el.textContent.trim();
     el.closest('.chips').querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
     el.classList.add('on');
   }
 
-  function insertToken(token) {
-    const ta = document.getElementById('wa-template');
-    const start = ta.selectionStart, end = ta.selectionEnd;
-    ta.value = ta.value.slice(0, start) + token + ta.value.slice(end);
-    ta.selectionStart = ta.selectionEnd = start + token.length;
-    ta.focus();
-  }
-
-  function log(msg, type='') {
-    const box = document.getElementById('log-box');
+  function addLog(msg, type) {
+    const box  = document.getElementById('log-box');
     const line = document.createElement('span');
-    line.className = 'log-line ' + type;
+    line.className = 'log-line' + (type ? ' ' + type : '');
     line.textContent = msg;
     box.appendChild(line);
     box.scrollTop = box.scrollHeight;
   }
 
-  function setProgress(pct, text) {
+  function setProgress(pct, label) {
     document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-pct').textContent = pct + '%';
-    if (text) document.getElementById('progress-text').textContent = text;
+    document.getElementById('progress-pct').textContent  = pct + '%';
+    if (label) document.getElementById('progress-text').textContent = label;
   }
 
-  function fmt(n) {
-    if (n === 'N/A' || n == null || n === '') return null;
-    const num = parseInt(n);
-    if (isNaN(num)) return null;
-    if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';
-    if (num >= 1000)    return (num/1000).toFixed(1) + 'K';
-    return num.toLocaleString();
-  }
-
-  // ── SCRAPE ──
   async function startScrape() {
     const niche    = document.getElementById('niche').value.trim();
-    const location = document.getElementById('location').value.trim();
-    if (!niche || !location) { alert('Please enter both a niche and a location.'); return; }
+    const loc      = document.getElementById('location-input').value.trim();
 
+    if (!niche || !loc) {
+      alert('Please enter both a niche and a location.');
+      return;
+    }
+
+    // Reset state
     allLeads = [];
     document.getElementById('table-body').innerHTML = '';
-    document.getElementById('log-box').innerHTML = '';
-    ['s-total','s-email','s-ig'].forEach(id => document.getElementById(id).textContent = '0');
+    document.getElementById('log-box').innerHTML    = '';
+    document.getElementById('s-total').textContent  = '0';
+    document.getElementById('s-phone').textContent  = '0';
+    document.getElementById('s-rated').textContent  = '0';
     document.getElementById('count-badge').textContent = '0 leads found';
-    document.getElementById('export-btn').disabled = true;
+    document.getElementById('export-btn').disabled  = true;
 
-    document.getElementById('progress-wrap').style.display = 'block';
+    // Show progress bar
+    document.getElementById('progress-wrap').classList.add('active');
     document.getElementById('run-btn').disabled = true;
-    document.getElementById('run-btn').innerHTML = '<span class="spin">⟳</span> Scraping…';
+    document.getElementById('run-btn').innerHTML = '<span class="spin">⟳</span> Searching…';
 
-    setProgress(5, 'Connecting to Yelp…');
-    log('Searching "' + niche + '" in ' + location, 'ok');
-    log('Stage 1: Fetching Yelp businesses via API…');
+    setProgress(10, 'Connecting to Yelp API…');
+    addLog('Searching "' + niche + '" in ' + loc, 'ok');
 
-    // Simulate incremental progress while server works
-    const steps = [
-      [20, 'Connecting to Yelp API…'],
-      [45, 'Fetching businesses…'],
-      [70, 'Processing results…'],
-      [85, 'Almost done…'],
-    ];
-    let stepIndex = 0;
-    const progressTimer = setInterval(() => {
-      if (stepIndex < steps.length) {
-        const [pct, label] = steps[stepIndex++];
-        setProgress(pct, label);
-        log(label);
-      }
-    }, 4000);
+    // Animate progress while waiting
+    const steps = [[30,'Fetching businesses…'],[55,'Processing data…'],[75,'Almost done…']];
+    let si = 0;
+    const timer = setInterval(() => {
+      if (si < steps.length) { setProgress(steps[si][0], steps[si][1]); addLog(steps[si][1]); si++; }
+    }, 3000);
 
     try {
-      const res = await fetch('/scrape', {
-        method: 'POST',
+      const res  = await fetch('/scrape', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ niche, location })
+        body:    JSON.stringify({ niche, location: loc }),
       });
 
-      clearInterval(progressTimer);
-      setProgress(95, 'Rendering dashboard…');
-      log('Rendering results…');
+      clearInterval(timer);
 
-      if (!res.ok) throw new Error('Server error ' + res.status);
       const data = await res.json();
 
+      if (!res.ok) {
+        throw new Error(data.error || 'Server error ' + res.status);
+      }
+
       allLeads = data.leads || [];
+      setProgress(100, '✅ Done!');
+      addLog('✅ ' + allLeads.length + ' leads found.', 'ok');
       renderTable(allLeads);
       updateStats(allLeads);
+      document.getElementById('export-btn').disabled = allLeads.length === 0;
 
-      setProgress(100, '✅ Done!');
-      log('✅ ' + allLeads.length + ' leads found.', 'ok');
-
-      const hasData = allLeads.length > 0;
-      document.getElementById('export-btn').disabled = !hasData;
-
-    } catch(err) {
-      clearInterval(progressTimer);
-      log('❌ ' + err.message, 'err');
-      setProgress(0, 'Error');
+    } catch (err) {
+      clearInterval(timer);
+      setProgress(0, '❌ Error');
+      addLog('❌ ' + err.message, 'err');
     } finally {
       document.getElementById('run-btn').disabled = false;
       document.getElementById('run-btn').innerHTML = '🚀 Find Leads';
     }
   }
 
-  // ── RENDER ──
   function renderTable(leads) {
-    const tbody = document.getElementById('table-body');
     document.getElementById('count-badge').textContent = leads.length + ' leads found';
+    const tbody = document.getElementById('table-body');
 
     if (!leads.length) {
-      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
-        <div class="empty-icon">😕</div>
-        <div class="empty-title">No leads found</div>
-        <div class="empty-sub">Try a broader niche or location.</div>
-      </div></td></tr>`;
+      tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">😕</div><div class="empty-title">No leads found</div><div class="empty-sub">Try a broader niche or different location.</div></div></td></tr>';
       return;
     }
 
-    tbody.innerHTML = leads.map((l, i) => {
-      const phoneCell = l.Phone
-        ? `<span class="pill pill-green">📱 ${l.Phone}</span>`
-        : `<span style="color:var(--muted);font-size:12px">—</span>`;
-
-      const addrCell = l.Address
-        ? `<span style="font-size:12px">${l.Address}</span>`
-        : `<span style="color:var(--muted);font-size:12px">—</span>`;
-
-      const ratingCell = l.Rating
-        ? `<span class="pill pill-yellow">⭐ ${l.Rating}</span>`
-        : `<span style="color:var(--muted);font-size:12px">—</span>`;
-
-      const reviewsCell = l.Reviews
-        ? `<span class="pill pill-muted">${l.Reviews}</span>`
-        : `<span style="color:var(--muted);font-size:12px">—</span>`;
-
-      const webCell = l.Website
-        ? `<a class="web-link" href="${l.Website}" target="_blank" title="${l.Website}">View on Yelp</a>`
-        : `<span style="color:var(--muted);font-size:12px">—</span>`;
-
-      return `<tr>
-        <td style="color:var(--muted);font-size:11.5px;width:32px">${i+1}</td>
-        <td class="cell-name">${(l['Business Name']||'—').replace(/&/g,'&amp;')}</td>
-        <td><span style="font-size:12px;color:var(--muted)">${l.Category||'—'}</span></td>
-        <td>${phoneCell}</td>
-        <td>${addrCell}</td>
-        <td>${ratingCell}</td>
-        <td>${reviewsCell}</td>
-        <td>${webCell}</td>
-      </tr>`;
-    }).join('');
+    tbody.innerHTML = leads.map((l, i) => `
+      <tr>
+        <td style="color:var(--muted);font-size:11.5px">${i + 1}</td>
+        <td class="cell-name">${esc(l['Business Name'])}</td>
+        <td style="font-size:12px;color:var(--muted)">${l.Category || '—'}</td>
+        <td>${l.Phone ? '<span class="pill pill-green">📱 ' + l.Phone + '</span>' : '<span style="color:var(--muted)">—</span>'}</td>
+        <td style="font-size:12px">${l.Address || '—'}</td>
+        <td>${l.Rating ? '<span class="pill pill-yellow">⭐ ' + l.Rating + '</span>' : '—'}</td>
+        <td>${l.Reviews ? '<span class="pill pill-muted">' + l.Reviews + '</span>' : '—'}</td>
+        <td>${l.Website ? '<a class="web-link" href="' + l.Website + '" target="_blank">View on Yelp</a>' : '—'}</td>
+      </tr>`).join('');
   }
 
   function updateStats(leads) {
     document.getElementById('s-total').textContent = leads.length;
-    document.getElementById('s-email').textContent = leads.filter(l => l.Phone).length;
-    document.getElementById('s-ig').textContent    = leads.filter(l => l.Rating).length;
+    document.getElementById('s-phone').textContent = leads.filter(l => l.Phone).length;
+    document.getElementById('s-rated').textContent = leads.filter(l => l.Rating).length;
   }
 
-  // ── FILTER ──
   function filterTable() {
-    const q       = document.getElementById('search-box').value.toLowerCase();
-    const srcF    = document.getElementById('filter-source').value;
-
+    const q   = document.getElementById('search-box').value.toLowerCase();
+    const fil = document.getElementById('filter-rated').value;
     const filtered = allLeads.filter(l => {
       if (q && !Object.values(l).some(v => String(v).toLowerCase().includes(q))) return false;
-      if (srcF && l.Source !== srcF) return false;
+      if (fil === 'rated' && !l.Rating) return false;
+      if (fil === 'phone' && !l.Phone)  return false;
       return true;
     });
     renderTable(filtered);
   }
 
-  // ── EXPORT CSV ──
   async function exportCSV() {
     if (!allLeads.length) return;
-    const res = await fetch('/export-csv', {
-      method: 'POST',
+    const res  = await fetch('/export-csv', {
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ leads: allLeads })
+      body:    JSON.stringify({ leads: allLeads }),
     });
     const blob = await res.blob();
     const url  = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'instagram_leads.csv'; a.click();
+    const a    = document.createElement('a');
+    a.href = url; a.download = 'leads.csv'; a.click();
     URL.revokeObjectURL(url);
   }
 
+  function esc(str) {
+    return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
 </script>
 
 </body>
