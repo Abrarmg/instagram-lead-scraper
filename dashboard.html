@@ -312,8 +312,8 @@
       <div class="field-label" style="margin-bottom:9px">📊 Results Summary</div>
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-num purple" id="s-total">0</div><div class="stat-label">Total Leads</div></div>
-        <div class="stat-card"><div class="stat-num yellow" id="s-email">0</div><div class="stat-label">Emails</div></div>
-        <div class="stat-card"><div class="stat-num pink"   id="s-ig">0</div><div class="stat-label">Instagram</div></div>
+        <div class="stat-card"><div class="stat-num yellow" id="s-email">0</div><div class="stat-label">With Phone</div></div>
+        <div class="stat-card"><div class="stat-num pink"   id="s-ig">0</div><div class="stat-label">With Rating</div></div>
       </div>
     </div>
 
@@ -345,12 +345,12 @@
           <tr>
             <th>#</th>
             <th>Business</th>
-            <th>Instagram</th>
-            <th>Followers</th>
+            <th>Category</th>
             <th>Phone</th>
-            <th>Email</th>
-            <th>Website</th>
-            <th>Source</th>
+            <th>Address</th>
+            <th>Rating</th>
+            <th>Reviews</th>
+            <th>Yelp Page</th>
           </tr>
         </thead>
         <tbody id="table-body">
@@ -433,13 +433,10 @@
 
     // Simulate incremental progress while server works
     const steps = [
-      [15, 'Fetching Yelp listings…'],
-      [28, 'Getting business details…'],
-      [42, 'Finding Instagram profiles…'],
-      [55, 'Fetching Instagram data…'],
-      [68, 'Extracting emails & phones…'],
-      [78, 'Processing leads…'],
-      [88, 'Almost done…'],
+      [20, 'Connecting to Yelp API…'],
+      [45, 'Fetching businesses…'],
+      [70, 'Processing results…'],
+      [85, 'Almost done…'],
     ];
     let stepIndex = 0;
     const progressTimer = setInterval(() => {
@@ -451,7 +448,7 @@
     }, 4000);
 
     try {
-      const res = await fetch(location.origin + '/scrape', {
+      const res = await fetch('/scrape', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ niche, location })
@@ -499,55 +496,43 @@
     }
 
     tbody.innerHTML = leads.map((l, i) => {
-      const followers = fmt(l.Followers);
-      const follPill = followers
-        ? `<span class="pill pill-purple">${followers}</span>`
-        : `<span class="pill pill-muted">N/A</span>`;
-
-      const igCell = l['Instagram URL']
-        ? `<a class="ig-link" href="${l['Instagram URL']}" target="_blank">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-            @${l.Username}
-          </a>`
+      const phoneCell = l.Phone
+        ? `<span class="pill pill-green">📱 ${l.Phone}</span>`
         : `<span style="color:var(--muted);font-size:12px">—</span>`;
 
-      const phone = l.WhatsApp || l.Phone || '';
-      const phoneCell = phone
-        ? `<span class="pill pill-green">📱 ${phone}</span>`
+      const addrCell = l.Address
+        ? `<span style="font-size:12px">${l.Address}</span>`
         : `<span style="color:var(--muted);font-size:12px">—</span>`;
 
-      const emailCell = l.Email
-        ? `<span class="pill pill-yellow">✉️ ${l.Email}</span>`
+      const ratingCell = l.Rating
+        ? `<span class="pill pill-yellow">⭐ ${l.Rating}</span>`
+        : `<span style="color:var(--muted);font-size:12px">—</span>`;
+
+      const reviewsCell = l.Reviews
+        ? `<span class="pill pill-muted">${l.Reviews}</span>`
         : `<span style="color:var(--muted);font-size:12px">—</span>`;
 
       const webCell = l.Website
-        ? `<a class="web-link" href="${l.Website}" target="_blank" title="${l.Website}">${l.Website.replace(/https?:\/\/(www\.)?/,'')}</a>`
+        ? `<a class="web-link" href="${l.Website}" target="_blank" title="${l.Website}">View on Yelp</a>`
         : `<span style="color:var(--muted);font-size:12px">—</span>`;
-
-      const sourceCell = l.Source === 'Yelp + Instagram'
-        ? `<span class="source-ig">✅ IG+Yelp</span>`
-        : `<span class="source-yelp">Yelp</span>`;
 
       return `<tr>
         <td style="color:var(--muted);font-size:11.5px;width:32px">${i+1}</td>
-        <td class="cell-name">
-          ${(l['Business Name']||l.Username||'—').replace(/&/g,'&amp;')}
-          ${l.Category ? `<div class="cell-sub">${l.Category}</div>` : ''}
-        </td>
-        <td>${igCell}</td>
-        <td>${follPill}</td>
+        <td class="cell-name">${(l['Business Name']||'—').replace(/&/g,'&amp;')}</td>
+        <td><span style="font-size:12px;color:var(--muted)">${l.Category||'—'}</span></td>
         <td>${phoneCell}</td>
-        <td>${emailCell}</td>
+        <td>${addrCell}</td>
+        <td>${ratingCell}</td>
+        <td>${reviewsCell}</td>
         <td>${webCell}</td>
-        <td>${sourceCell}</td>
       </tr>`;
     }).join('');
   }
 
   function updateStats(leads) {
     document.getElementById('s-total').textContent = leads.length;
-    document.getElementById('s-email').textContent  = leads.filter(l => l.Email).length;
-    document.getElementById('s-ig').textContent     = leads.filter(l => l['Instagram URL']).length;
+    document.getElementById('s-email').textContent = leads.filter(l => l.Phone).length;
+    document.getElementById('s-ig').textContent    = leads.filter(l => l.Rating).length;
   }
 
   // ── FILTER ──
@@ -566,7 +551,7 @@
   // ── EXPORT CSV ──
   async function exportCSV() {
     if (!allLeads.length) return;
-    const res = await fetch(location.origin + '/export-csv', {
+    const res = await fetch('/export-csv', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ leads: allLeads })
