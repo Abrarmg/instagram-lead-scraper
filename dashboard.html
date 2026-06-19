@@ -451,7 +451,7 @@
     }, 4000);
 
     try {
-      const res = await fetch('/scrape', {
+      const res = await fetch(location.origin + '/scrape', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ niche, location })
@@ -566,7 +566,7 @@
   // ── EXPORT CSV ──
   async function exportCSV() {
     if (!allLeads.length) return;
-    const res = await fetch('/export-csv', {
+    const res = await fetch(location.origin + '/export-csv', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ leads: allLeads })
