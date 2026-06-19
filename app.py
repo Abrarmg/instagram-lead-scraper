@@ -7,14 +7,17 @@ import csv
 import io
 import time
 import random
-import urllib.parse
-from bs4 import BeautifulSoup
-from urllib.parse import quote_plus
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder=BASE_DIR, static_url_path="")
 
-HEADERS = {
+YELP_API_KEY = os.environ.get("YELP_API_KEY", "")
+YELP_HEADERS = {
+    "Authorization": f"Bearer {YELP_API_KEY}",
+    "Accept": "application/json",
+}
+
+WEB_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     "Accept-Language": "en-US,en;q=0.9",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -28,79 +31,53 @@ IG_SKIP = {
 
 
 # ─────────────────────────────────────────────
-# STAGE 1: Yelp → business names + slugs
+# STAGE 1: Yelp Fusion API → businesses
 # ─────────────────────────────────────────────
-def yelp_search(niche, location, session, pages=5):
+def yelp_search(niche, location, session, limit=50):
     businesses = []
-    seen = set()
-
-    for page in range(pages):
-        offset = page * 10
-        url = (f"https://www.yelp.com/search?find_desc={quote_plus(niche)}"
-               f"&find_loc={quote_plus(location)}&start={offset}")
-        try:
-            time.sleep(random.uniform(1.5, 3.0))
-            r = session.get(url, headers=HEADERS, timeout=15)
-            if r.status_code != 200:
-                break
-
-            # Extract slug+name pairs using Yelp's SearchResultBizName pattern
-            pattern = (r'SearchResultBizName[^>]*>.*?href=\"[^\"]*?/biz/([a-z0-9\-]+)'
-                       r'[^\"]*\"[^>]*>([^<]{3,80})</a>')
-            pairs = re.findall(pattern, r.text, re.DOTALL)
-
-            for slug, raw_name in pairs:
-                if slug in seen:
-                    continue
-                seen.add(slug)
-                name = raw_name.replace("&amp;", "&").replace("&quot;", '"').strip()
-                businesses.append({
-                    "name": name,
-                    "yelp_slug": slug,
-                    "yelp_url": f"https://www.yelp.com/biz/{slug}",
-                    "phone": "",
-                    "website": "",
-                    "instagram_username": "",
-                })
-
-            if not pairs:
-                break
-
-        except Exception:
-            break
-
+    try:
+        r = session.get(
+            "https://api.yelp.com/v3/businesses/search",
+            headers=YELP_HEADERS,
+            params={"term": niche, "location": location, "limit": limit},
+            timeout=15,
+        )
+        if r.status_code != 200:
+            return businesses
+        for b in r.json().get("businesses", []):
+            businesses.append({
+                "name":               b.get("name", ""),
+                "yelp_id":            b.get("id", ""),
+                "yelp_url":           b.get("url", ""),
+                "phone":              b.get("display_phone", "") or b.get("phone", ""),
+                "website":            "",
+                "instagram_username": "",
+                "category":           ", ".join(c["title"] for c in b.get("categories", [])),
+            })
+    except Exception:
+        pass
     return businesses
 
 
 # ─────────────────────────────────────────────
-# STAGE 2: Yelp biz page → phone + website
+# STAGE 2: Yelp business detail API → website
 # ─────────────────────────────────────────────
-def yelp_biz_page(biz, session):
+def yelp_biz_detail(biz, session):
+    if not biz.get("yelp_id"):
+        return biz
     try:
-        time.sleep(random.uniform(1.0, 2.5))
-        r = session.get(biz["yelp_url"], headers=HEADERS, timeout=15)
-        if r.status_code != 200:
-            return biz
-        text = r.text
-
-        # Phone
-        phone_m = re.search(r'\((\d{3})\)\s*(\d{3})-(\d{4})', text)
-        if phone_m:
-            biz["phone"] = f"({phone_m.group(1)}) {phone_m.group(2)}-{phone_m.group(3)}"
-
-        # Website via Yelp's biz_redir links
-        redir = re.findall(r'biz_redir\?url=([^&\"\s]+)', text)
-        if redir:
-            decoded = urllib.parse.unquote(redir[0])
-            if decoded.startswith("http"):
-                biz["website"] = decoded
-
-        # Instagram directly mentioned on Yelp page
-        ig = re.findall(r'instagram\.com/([A-Za-z0-9._]{2,40})', text)
-        clean = [u for u in ig if u.lower() not in IG_SKIP]
-        if clean:
-            biz["instagram_username"] = clean[0]
-
+        r = session.get(
+            f"https://api.yelp.com/v3/businesses/{biz['yelp_id']}",
+            headers=YELP_HEADERS,
+            timeout=10,
+        )
+        if r.status_code == 200:
+            data = r.json()
+            biz["website"] = data.get("url", "")  # external website if available
+            # Some responses include hours/attributes but not always a website
+            # Use the Yelp URL as fallback website
+            if not biz["website"]:
+                biz["website"] = biz.get("yelp_url", "")
     except Exception:
         pass
     return biz
@@ -222,13 +199,13 @@ def scrape():
     session = req.Session()
     session.headers.update({"Accept-Encoding": "gzip, deflate"})
 
-    # Stage 1 — Yelp search
-    businesses = yelp_search(niche, location, session, pages=5)
+    # Stage 1 — Yelp Fusion API search
+    businesses = yelp_search(niche, location, session, limit=50)
 
     leads = []
-    for biz in businesses[:30]:
-        # Stage 2 — Yelp biz page
-        biz = yelp_biz_page(biz, session)
+    for biz in businesses[:50]:
+        # Stage 2 — Yelp business detail for website
+        biz = yelp_biz_detail(biz, session)
 
         ig_username = biz.get("instagram_username")
 
