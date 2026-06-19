@@ -429,8 +429,26 @@
 
     setProgress(5, 'Connecting to Yelp…');
     log('Searching "' + niche + '" in ' + location, 'ok');
-    log('Stage 1: Scraping Yelp listings…');
-    setProgress(20, 'Scanning Yelp pages…');
+    log('Stage 1: Fetching Yelp businesses via API…');
+
+    // Simulate incremental progress while server works
+    const steps = [
+      [15, 'Fetching Yelp listings…'],
+      [28, 'Getting business details…'],
+      [42, 'Finding Instagram profiles…'],
+      [55, 'Fetching Instagram data…'],
+      [68, 'Extracting emails & phones…'],
+      [78, 'Processing leads…'],
+      [88, 'Almost done…'],
+    ];
+    let stepIndex = 0;
+    const progressTimer = setInterval(() => {
+      if (stepIndex < steps.length) {
+        const [pct, label] = steps[stepIndex++];
+        setProgress(pct, label);
+        log(label);
+      }
+    }, 4000);
 
     try {
       const res = await fetch('/scrape', {
@@ -439,13 +457,13 @@
         body: JSON.stringify({ niche, location })
       });
 
-      setProgress(70, 'Visiting websites + Instagram profiles…');
-      log('Stage 2–4: Fetching websites & Instagram data…');
+      clearInterval(progressTimer);
+      setProgress(95, 'Rendering dashboard…');
+      log('Rendering results…');
 
       if (!res.ok) throw new Error('Server error ' + res.status);
       const data = await res.json();
 
-      setProgress(95, 'Rendering dashboard…');
       allLeads = data.leads || [];
       renderTable(allLeads);
       updateStats(allLeads);
@@ -457,6 +475,7 @@
       document.getElementById('export-btn').disabled = !hasData;
 
     } catch(err) {
+      clearInterval(progressTimer);
       log('❌ ' + err.message, 'err');
       setProgress(0, 'Error');
     } finally {
