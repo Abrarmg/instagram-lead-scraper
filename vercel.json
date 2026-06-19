@@ -1,16 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "app.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "app.py"
-    }
+  "rewrites": [
+    { "source": "/scrape", "destination": "/api/index" },
+    { "source": "/export-csv", "destination": "/api/index" },
+    { "source": "/health", "destination": "/api/index" }
   ],
   "env": {
     "YELP_API_KEY": "VBeaGGKDiSdCzAfbi_ouJc7HlapwrDFALu7Rjos7zCMQsJvllkb2RLYvGLtYsx5rm-KoUmBLcx9j5rzGEs56UiUIvfqdNIw2AEhczcxc01_Y85I8uumIsrrTm-E0anYx"

@@ -1,25 +1,17 @@
 #!/usr/bin/env python3
 import os
-from flask import Flask, request, jsonify, send_from_directory, Response
+from flask import Flask, request, jsonify, Response
 import requests as req
 import csv
 import io
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-app = Flask(__name__, static_folder=BASE_DIR, static_url_path="")
+app = Flask(__name__)
 
 YELP_API_KEY = os.environ.get(
     "YELP_API_KEY",
     "VBeaGGKDiSdCzAfbi_ouJc7HlapwrDFALu7Rjos7zCMQsJvllkb2RLYvGLtYsx5rm-KoUmBLcx9j5rzGEs56UiUIvfqdNIw2AEhczcxc01_Y85I8uumIsrrTm-E0anYx"
 )
 
-
-@app.route("/")
-def index():
-    resp = send_from_directory(BASE_DIR, "dashboard.html")
-    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    resp.headers["Pragma"] = "no-cache"
-    return resp
 
 
 @app.route("/health")
@@ -92,4 +84,12 @@ def export_csv():
 
 
 if __name__ == "__main__":
+    from flask import send_from_directory
+    @app.route("/")
+    def index():
+        import os
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        return send_from_directory(parent_dir, "index.html")
+
     app.run(port=5055, debug=False)
+
